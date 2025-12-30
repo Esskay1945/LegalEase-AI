@@ -5,8 +5,10 @@ services:
     runtime: node
     env: node
     plan: free
-    buildCommand: npm install
-    startCommand: npm start
+    # Install from backend directory
+    buildCommand: cd backend && npm install
+    # Run from backend directory
+    startCommand: cd backend && npm start
     envVars:
       - key: NODE_ENV
         value: production
@@ -22,6 +24,9 @@ services:
         sync: false
       - key: EMAIL_PASS
         sync: false
+      - key: RAG_SERVICE_URL
+        value: https://legalease-rag.onrender.com
+    # Health check will be at your API endpoint
     healthCheckPath: /api/profile
 
   # Python RAG Service
@@ -30,8 +35,10 @@ services:
     runtime: python
     env: python
     plan: free
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn rag_service:app --host 0.0.0.0 --port 10000
+    # Install from rag directory
+    buildCommand: cd rag && pip install -r requirements.txt
+    # Run from rag directory
+    startCommand: cd rag && uvicorn rag_service:app --host 0.0.0.0 --port 10000
     envVars:
       - key: GOOGLE_API_KEY
         sync: false
